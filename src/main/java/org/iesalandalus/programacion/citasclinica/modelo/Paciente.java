@@ -11,10 +11,7 @@ public class Paciente {
 
 	private String formateaNombre() {
 		String nombre;
-		do {
-			System.out.println("Introduzca el nombre del paciente");
-			nombre = Entrada.cadena();
-		} while (nombre == " ");
+		nombre = getNombre();
 
 		StringBuilder convertir = new StringBuilder(nombre.length());
 
@@ -35,5 +32,49 @@ public class Paciente {
 		return nombreConvertido;
 
 	}
-	
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		do {
+			System.out.println("Introduzca el nombre del paciente");
+			nombre = Entrada.cadena();
+		} while (nombre == " ");
+		this.nombre = nombre;
+	}
+
+	public String getDni() {
+		return dni;
+	}
+
+	private void setDni(String dni) {
+		String numeroDni;
+		int numeroDniInt;
+		char[] arrayLetraDni = { 'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q',
+				'V', 'H', 'L', 'C', 'K', 'E' };
+		char letraDni;
+
+		do {
+			System.out.println("Introduce tu numero de DNI");
+			numeroDni = Entrada.cadena();
+			numeroDniInt = Integer.parseInt(numeroDni);
+		} while (numeroDniInt < 10000000 || numeroDniInt > 99999999);
+
+		letraDni = arrayLetraDni[numeroDniInt % 23];
+
+		dni = numeroDni + letraDni;
+
+		this.dni = dni;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+
 }
