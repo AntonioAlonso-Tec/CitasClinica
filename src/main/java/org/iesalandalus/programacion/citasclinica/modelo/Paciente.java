@@ -1,5 +1,7 @@
 package org.iesalandalus.programacion.citasclinica.modelo;
 
+import java.util.Objects;
+
 import org.iesalandalus.programacion.utilidades.Entrada;
 
 public class Paciente {
@@ -8,6 +10,22 @@ public class Paciente {
 	private String nombre;
 	private String dni;
 	private String telefono;
+
+	public Paciente(String nombre, String dni, String telefono) {
+		nombre = getNombre();
+		dni = getDni();
+		telefono = getTelefono();
+	}
+
+	public Paciente(Paciente paciente) {
+		if (dni == null || nombre == null || telefono == null) {
+			System.out.println("ERROR: No pueden haber datos nulos");
+		} else {
+			setNombre(paciente.getNombre());
+			setDni(paciente.getDni());
+			setTelefono(paciente.getTelefono());
+		}
+	}
 
 	private String formateaNombre() {
 		String nombre;
@@ -74,7 +92,53 @@ public class Paciente {
 	}
 
 	public void setTelefono(String telefono) {
+		int numTelefono;
+		do {
+			do {
+				System.out.println("Introduce el numero de teléfono");
+				telefono = Entrada.cadena();
+			} while (telefono == null);
+			numTelefono = Integer.parseInt(telefono);
+		} while (numTelefono < 600000000 || numTelefono > 999999999);
 		this.telefono = telefono;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(dni, nombre, telefono);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Paciente)) {
+			return false;
+		}
+		Paciente other = (Paciente) obj;
+		return Objects.equals(dni, other.dni) && Objects.equals(nombre, other.nombre)
+				&& Objects.equals(telefono, other.telefono);
+	}
+
+	private String getIniciales() {
+		String iniciales = "";
+		char inicial;
+
+		for (int i = 0; i < formateaNombre().length(); i++) {
+			if (Character.isUpperCase(formateaNombre().charAt(i))) {
+				inicial = formateaNombre().charAt(i);
+				iniciales += inicial;
+			}
+		}
+		return iniciales;
+	}
+
+	@Override
+	public String toString() {
+		return "nombre= (" +getIniciales() + ") " + formateaNombre() + ", dni=" + getDni() + ", telefono=" + getTelefono();
+	}
+	
+	
 
 }
