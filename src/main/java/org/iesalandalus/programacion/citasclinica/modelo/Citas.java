@@ -1,22 +1,12 @@
 package org.iesalandalus.programacion.citasclinica.modelo;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import javax.naming.OperationNotSupportedException;
 
 public class Citas {
 	private int capacidad;
 	private int tamano;
 	private Cita[] coleccionCitas;
-
-	public Citas(int capacidad) {
-		if (capacidadSuperada(capacidad) == true) {
-			this.capacidad = capacidad;
-		}
-
-	}
 
 	public int getCapacidad() {
 		return capacidad;
@@ -26,27 +16,20 @@ public class Citas {
 		return tamano;
 	}
 
-	public Cita[] getCitas() {
+	public Cita[] getColeccionCitas() {
 		return coleccionCitas;
 	}
 
-	private boolean tamanoSuperado(int tamano) {
-		boolean tamanoCorrecto = false;
+	private int tamanoSuperado() {
+		int tamano = 0;
 
-		return tamanoCorrecto;
+		return tamano;
 	}
 
-	private boolean capacidadSuperada(int capacidad) {
-		boolean capacidadCorrecta = false;
-		if (capacidad < 1) {
-			capacidadCorrecta = false;
-			throw new IllegalArgumentException("ERROR: La capacidad debe ser mayor que cero.");
-		} else {
-			capacidad = capacidad;
-			capacidadCorrecta = true;
-		}
+	private int capacidadSuperada() {
+		int capacidad;
 
-		return capacidadCorrecta;
+		return capacidad = 0;
 	}
 
 	private int buscarIndice(Cita cita) {
@@ -61,38 +44,26 @@ public class Citas {
 		return indiceCita;
 	}
 
-	public void insertar(Cita cita) throws OperationNotSupportedException {
+	public void insertar(Cita cita) {
 		int citasNoDisponibles = 0;
-		int posicionCita=0;
-		
-		if (cita == null) {
-			throw new NullPointerException("ERROR: No se puede insertar una cita nula.");
-		} else{
+		boolean arrayLleno = false;
 
-			for (int i = 0; i < coleccionCitas.length; i++) {
-				if (coleccionCitas[i] == cita) {
-					throw new IllegalArgumentException("ERROR: Esta cita ya existe");
-				}
+		for (int i = 0; i < coleccionCitas.length; i++) {
+			if (coleccionCitas[i] != null) {
+				citasNoDisponibles++;
 			}
+		}
+
+		if (citasNoDisponibles == coleccionCitas.length - 1) {
+			throw new IllegalArgumentException("ERROR: No quedan citas disponibles");
+		} else {
 			for (int i = 0; i < coleccionCitas.length; i++) {
-				if (coleccionCitas[i] != null) {
-					citasNoDisponibles++;
+				if (coleccionCitas[i] == null) {
+					coleccionCitas[i] = cita;
 				}
-			}
-			if (citasNoDisponibles == coleccionCitas.length - 1) {
-				throw new OperationNotSupportedException("ERROR: No quedan citas disponibles");
-			} else {
-				for (int i = 0; i < coleccionCitas.length; i++) {
-					if (coleccionCitas[i] == null) {
-						posicionCita=i;
-						break;
-					}
-				}
-				coleccionCitas[posicionCita]=cita;
 			}
 		}
 	}
-
 
 	public Cita buscar(Cita cita) {
 		int contador = 0;
@@ -105,7 +76,7 @@ public class Citas {
 			}
 		}
 
-		if (contador == coleccionCitas.length) {
+		if (contador == coleccionCitas.length - 1) {
 			cita = null;
 			throw new NullPointerException("ERROR: Cita no encontrada");
 		} else {
@@ -131,14 +102,9 @@ public class Citas {
 		}
 	}
 
-	public void borrar(Cita cita) throws OperationNotSupportedException {
+	public void borrar(Cita cita) {
 		int posicionCita = 0;
 		int contador = 0;
-
-		if (cita == null) {
-			throw new OperationNotSupportedException("ERROR: No se puede borrar una cita nula");
-		}
-
 		for (int i = 0; i < coleccionCitas.length; i++) {
 			if (cita != coleccionCitas[i]) {
 				contador++;
@@ -154,26 +120,13 @@ public class Citas {
 		}
 	}
 
-	public Cita[] getCitas(LocalDate fecha) {
-		Cita[] almacenaCitas = new Cita[coleccionCitas.length];
-		if (fecha == null) {
-			throw new NullPointerException("ERROR: El día no puede ser nulo");
-		} else {
-			for (int i = 0; i < coleccionCitas.length; i++) {
-				if (fecha == coleccionCitas[i].getFechaHora().toLocalDate()) {
-					almacenaCitas[i] = coleccionCitas[i];
-				}
+	public void getCitas(LocalDateTime fechaHora) {
+
+		for (int i = 0; i < coleccionCitas.length; i++) {
+			if (fechaHora == coleccionCitas[i].getFechaHora()) {
+				System.out.println(coleccionCitas[i]);
 			}
 		}
-		return almacenaCitas;
 
-	}
-	public static void main(String[] args) throws OperationNotSupportedException {
-		Paciente paciente1=new Paciente("Tatisaka Alonso Hernandez","75255135D","950044954");
-		LocalDateTime fechahora=LocalDateTime.of(2019, 06, 12, 10, 00);
-		Cita cita1=new Cita(paciente1,fechahora);
-		Citas citas= new Citas(3);
-		citas.insertar(cita1);
-		System.out.println(citas);
 	}
 }
