@@ -54,11 +54,8 @@ public class Paciente {
 			if (Character.isLowerCase(formato.charAt(0))) {
 				formato.setCharAt(0, Character.toUpperCase(formato.charAt(0)));
 			}
-
-			System.out.println(formato.toString());
 			nombreConEspacios = formato.toString();
 			nombreFormateado = nombreConEspacios.trim().replaceAll("\\s{2,}", " ");
-			System.out.println(nombreFormateado);
 			return nombreFormateado;
 		}
 	}
@@ -124,7 +121,7 @@ public class Paciente {
 			throw new NullPointerException("ERROR: El teléfono de un paciente no puede ser nulo o vacío.");
 		} else if (!telefono.matches(ER_TELEFONO)) {
 			throw new IllegalArgumentException("ERROR: Este número de teléfono no es correcto");
-		}else if(telefono.matches(ER_TELEFONO)) {
+		} else if (telefono.matches(ER_TELEFONO)) {
 			this.telefono = telefono;
 		}
 
@@ -166,14 +163,5 @@ public class Paciente {
 		return String.format("nombre=%s (%s), DNI=%s, teléfono=%s", formateaNombre(nombre), getIniciales(),
 				comprobarLetraDni(dni), telefono);
 	}
-/*
-	public static void main(String[] args) {
-		Paciente paciente1 = new Paciente("Alfonso Macias Pajas", "75236188Z", "656498732");
-		// Paciente paciente2 = new Paciente(" ALFonsO MAcIas PaJAS ", "75236188Z",
-		// "656498732");
-		// paciente2.getNombre();
-		paciente1.getNombre();
-		paciente1.getDni();
-	}
-*/
+
 }

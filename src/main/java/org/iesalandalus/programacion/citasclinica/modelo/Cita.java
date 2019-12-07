@@ -10,43 +10,46 @@ public class Cita {
 	public static final String FORMATO_FECHA_HORA = "dd/MM/yyyy HH:mm";
 	private LocalDateTime fechaHora;
 	private Paciente paciente;
-	
+
 	public Cita(Paciente paciente, LocalDateTime fechaHora) {
 		setPaciente(paciente);
 		setFechaHora(fechaHora);
 	}
-	
+
 	public Cita(Cita cita) {
-		if (cita==null) {
+		if (cita == null) {
 			throw new NullPointerException("ERROR: No se puede copiar una cita nula.");
-		}else {
+		} else {
 			setPaciente(cita.getPaciente());
 			setFechaHora(cita.getFechaHora());
 		}
 	}
-	
+
 	public LocalDateTime getFechaHora() {
 		return fechaHora;
 	}
+
 	public void setFechaHora(LocalDateTime fechaHora) {
-		
-		if(fechaHora==null) {
+
+		if (fechaHora == null) {
 			throw new NullPointerException("ERROR: La fecha y hora de una cita no puede ser nula.");
-		}else {
-			this.fechaHora=fechaHora;
+		} else {
+			this.fechaHora = fechaHora;
 		}
 	}
+
 	public Paciente getPaciente() {
 		return new Paciente(paciente);
 	}
+
 	private void setPaciente(Paciente paciente) {
-		
-		if (paciente==null) {
+
+		if (paciente == null) {
 			throw new NullPointerException("ERROR: El paciente de una cita no puede ser nulo.");
-		}else {
+		} else {
 			this.paciente = new Paciente(paciente);
 		}
-		
+
 	}
 
 	@Override
@@ -68,10 +71,8 @@ public class Cita {
 
 	@Override
 	public String toString() {
-		return String.format("%s, fechaHora=%s", paciente, 
+		return String.format("%s, fechaHora=%s", paciente,
 				fechaHora.format(DateTimeFormatter.ofPattern(FORMATO_FECHA_HORA)));
 	}
-	
-	
-	
+
 }

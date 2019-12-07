@@ -12,8 +12,12 @@ public class Citas {
 	private Cita[] coleccionCitas;
 
 	public Citas(int capacidad) {
-		if (capacidadSuperada(capacidad) == true) {
+		if (capacidad < 1) {
+			throw new IllegalArgumentException("ERROR: La capacidad debe ser mayor que cero.");
+		} else {
 			this.capacidad = capacidad;
+			this.coleccionCitas = new Cita[capacidad];
+			this.tamano = 0;
 		}
 
 	}
@@ -30,150 +34,119 @@ public class Citas {
 		return coleccionCitas;
 	}
 
-	private boolean tamanoSuperado(int tamano) {
-		boolean tamanoCorrecto = false;
+	private boolean tamanoSuperado(int indice) {
+		return indice >= tamano;
 
-		return tamanoCorrecto;
 	}
 
-	private boolean capacidadSuperada(int capacidad) {
-		boolean capacidadCorrecta = false;
-		if (capacidad < 1) {
-			capacidadCorrecta = false;
-			throw new IllegalArgumentException("ERROR: La capacidad debe ser mayor que cero.");
-		} else {
-			capacidad = capacidad;
-			capacidadCorrecta = true;
-		}
-
-		return capacidadCorrecta;
+	private boolean capacidadSuperada(int indice) {
+		return indice >= capacidad;
 	}
 
 	private int buscarIndice(Cita cita) {
-		int indiceCita = 0;
+		int indice = 0;
+		boolean indiceEncontrado = false;
 
-		for (int i = 0; i < coleccionCitas.length; i++) {
-			if (cita == coleccionCitas[i]) {
-				indiceCita = i;
+		while (!tamanoSuperado(indice) && indiceEncontrado == false) {
+			if (coleccionCitas[indice].equals(cita)) {
+				indiceEncontrado = true;
+			} else {
+				indice++;
 			}
-		}
 
-		return indiceCita;
+		}
+		return indice;
 	}
 
 	public void insertar(Cita cita) throws OperationNotSupportedException {
-		int citasNoDisponibles = 0;
-		int posicionCita=0;
-		
+
+		System.out.println(buscar(cita));
+		System.out.println(cita);
+		if (capacidadSuperada(buscarIndice(cita))) {
+			throw new OperationNotSupportedException("ERROR: No se aceptan más citas.");
+		}
+
 		if (cita == null) {
 			throw new NullPointerException("ERROR: No se puede insertar una cita nula.");
-		} else{
-
-			for (int i = 0; i < coleccionCitas.length; i++) {
-				if (coleccionCitas[i] == cita) {
-					throw new IllegalArgumentException("ERROR: Esta cita ya existe");
-				}
-			}
-			for (int i = 0; i < coleccionCitas.length; i++) {
-				if (coleccionCitas[i] != null) {
-					citasNoDisponibles++;
-				}
-			}
-			if (citasNoDisponibles == coleccionCitas.length - 1) {
-				throw new OperationNotSupportedException("ERROR: No quedan citas disponibles");
-			} else {
-				for (int i = 0; i < coleccionCitas.length; i++) {
-					if (coleccionCitas[i] == null) {
-						posicionCita=i;
-						break;
-					}
-				}
-				coleccionCitas[posicionCita]=cita;
-			}
 		}
+		if (!tamanoSuperado(buscarIndice(cita))) {
+			throw new OperationNotSupportedException("ERROR: La cita está repetida");
+		} else {
+			coleccionCitas[buscarIndice(cita)] = new Cita(cita);
+			tamano++;
+		}
+
+		for (int i = 0; i < coleccionCitas.length; i++) {
+			System.out.println(coleccionCitas[i] + " en posicion " + i);
+			System.out.println("El tamaño del array es " + tamano);
+		}
+
 	}
 
-
 	public Cita buscar(Cita cita) {
-		int contador = 0;
-		Cita almacenaCita = null;
-		for (int i = 0; i < coleccionCitas.length; i++) {
-			if (coleccionCitas[i] != cita) {
-				contador++;
+		int posicionCita = 0;
+		boolean citaEncontrada = false;
+
+		while (posicionCita < getTamano() && citaEncontrada == false) {
+			if (coleccionCitas[posicionCita].equals(cita)) {
+				citaEncontrada = true;
 			} else {
-				almacenaCita = coleccionCitas[i];
+				posicionCita++;
 			}
 		}
 
-		if (contador == coleccionCitas.length) {
-			cita = null;
-			throw new NullPointerException("ERROR: Cita no encontrada");
+		if (citaEncontrada == true) {
+			return new Cita(cita);
 		} else {
-			cita = almacenaCita;
+			return null;
 		}
-
-		return cita;
-
 	}
 
 	private void desplazarUnaPosicionHaciaIzquierda(int posicion) {
-		int nuevaPosicion = 1;
-		if (coleccionCitas[posicion] != null) {
+		if (!coleccionCitas[posicion].equals(null)) {
 			throw new IllegalArgumentException("ERROR: Ya hay una cita en esta posicion");
 		} else {
-			coleccionCitas[posicion] = null;
+			coleccionCitas[posicion].equals(null);
 
 			for (int i = posicion + 1; i < coleccionCitas.length; i++) {
-				if (coleccionCitas[i] != null) {
-					coleccionCitas[i] = coleccionCitas[i - nuevaPosicion];
+				if (!coleccionCitas[i].equals(null)) {
+					coleccionCitas[i - 1] = coleccionCitas[i];
 				}
 			}
 		}
 	}
 
 	public void borrar(Cita cita) throws OperationNotSupportedException {
-		int posicionCita = 0;
-		int contador = 0;
-
-		if (cita == null) {
-			throw new OperationNotSupportedException("ERROR: No se puede borrar una cita nula");
+		if (cita.equals(null)) {
+			throw new NullPointerException("ERROR: No se puede borrar una cita nula.");
 		}
 
-		for (int i = 0; i < coleccionCitas.length; i++) {
-			if (cita != coleccionCitas[i]) {
-				contador++;
-			} else if (cita == coleccionCitas[i]) {
-				posicionCita = i;
-			}
-		}
-		if (contador == coleccionCitas.length) {
-			throw new IllegalArgumentException("ERROR: Esta cita no existe");
+		if (buscarIndice(cita) > tamano) {
+			throw new IllegalArgumentException("ERROR: Esta cita no existe y no se puede borrar");
 		} else {
-
-			desplazarUnaPosicionHaciaIzquierda(posicionCita);
+			coleccionCitas[buscarIndice(cita)] = null;
+			tamano--;
+			desplazarUnaPosicionHaciaIzquierda(buscarIndice(cita));
 		}
 	}
 
 	public Cita[] getCitas(LocalDate fecha) {
-		Cita[] almacenaCitas = new Cita[coleccionCitas.length];
 		if (fecha == null) {
-			throw new NullPointerException("ERROR: El día no puede ser nulo");
-		} else {
-			for (int i = 0; i < coleccionCitas.length; i++) {
-				if (fecha == coleccionCitas[i].getFechaHora().toLocalDate()) {
-					almacenaCitas[i] = coleccionCitas[i];
+			throw new NullPointerException("ERROR: No se pueden devolver las citas para un día nulo.");
+		}
+		if (fecha != null) {
+			for (int i = 0; i < coleccionCitas.length - 1; i++) {
+				if (fecha.equals(coleccionCitas[i].getFechaHora().toLocalDate())) {
+					if (!coleccionCitas[i].equals(null)) {
+						System.out.println(coleccionCitas[i]);
+					} else {
+						throw new NullPointerException("ERROR: No se puede consultar citas nulas.");
+
+					}
 				}
 			}
 		}
-		return almacenaCitas;
+		return coleccionCitas;
+	}
 
-	}
-	public static void main(String[] args) throws OperationNotSupportedException {
-		Paciente paciente1=new Paciente("Tatisaka Alonso Hernandez","75255135D","950044954");
-		LocalDateTime fechahora=LocalDateTime.of(2019, 06, 12, 10, 00);
-		Cita cita1=new Cita(paciente1,fechahora);
-		Citas citas= new Citas(3);
-		citas.insertar(cita1);
-		System.out.println(citas);
-	}
 }
